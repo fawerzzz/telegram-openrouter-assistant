@@ -1,0 +1,36 @@
+services:
+  telegram-assistant:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      - DATABASE_URL=${DATABASE_URL}
+    networks:
+      - tg-net
+    depends_on:
+      tg-pg-bd:
+        condition: service_healthy
+
+  tg-pg-bd:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: assistant
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER} -d $${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+      start_period: 10s
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    networks:
+      - tg-net
+
+volumes:
+  db-data:
+
+networks:
+  tg-net:
+    driver: bridge

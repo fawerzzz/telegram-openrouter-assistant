@@ -1,0 +1,5 @@
+asyncpg>=0.31.0
+aiogram>=3.31,<4
+aiohttp>=3.9
+apscheduler>=3.10
+python-dotenv>=1.0
