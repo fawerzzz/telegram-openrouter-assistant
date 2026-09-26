@@ -3,14 +3,16 @@ pipeline {
 
     environment {
         PATH = "/Applications/Docker.app/Contents/Resources/bin:$PATH"
-        DB_PASSWORD = credentials('postgres-db-password')
-        DB_USER = credentials('postgres-db-user')
+
     }
     triggers { pollSCM ('* * * * *')}
     stages {
         stage('Build') {
             steps {
-                sh 'docker compose up --build'
+                withCredentials([file(credentialsId: 'env-file', variable: 'ENV_FILE')]) {
+                    sh "cp \${ENV_FILE} .env"
+                    sh "docker compose up -d"
+                }
             }
         }
     }
