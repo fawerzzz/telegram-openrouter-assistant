@@ -5,7 +5,7 @@ pipeline {
         PATH = "/Applications/Docker.app/Contents/Resources/bin:$PATH"
 
     }
-    triggers { pollSCM ('* * * * *')}
+    triggers { pollSCM ('* * * * *') }
     stages {
         stage('Build') {
             steps {
