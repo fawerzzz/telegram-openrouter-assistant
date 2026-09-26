@@ -3,15 +3,10 @@ pipeline {
     agent any
 
     stages {
-        stage('Hello') {
+        stage('Docker build') {
             steps {
-                echo 'Hello from Jenkins!'
-            }
-        }
-
-        stage('Check') {
-            steps {
-                sh 'echo "Pipeline is working"'
+                sh 'docker build .'
+                echo 'done!'
             }
         }
     }
