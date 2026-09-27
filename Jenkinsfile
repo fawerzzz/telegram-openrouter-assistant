@@ -19,6 +19,8 @@ pipeline {
         stage('Deploy') {
             steps {
                 withCredentials([file(credentialsId: 'env-file', variable: 'ENV_FILE')]) {
+                    sh 'ls -la .env'
+                    sh 'whoami'
                     sh "cp \${ENV_FILE} .env"
                     sh "docker compose -p my-pipeline up -d --no-build"
                 }
