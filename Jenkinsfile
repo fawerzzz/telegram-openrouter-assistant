@@ -12,7 +12,9 @@ pipeline {
     triggers { pollSCM ('* * * * *') }
     stages {
         stage('Build') {
-            sh "docker compose build telegram-assistant"
+                steps {
+                    sh "docker compose build telegram-assistant"
+                }
         }
         stage('Deploy') {
             steps {
