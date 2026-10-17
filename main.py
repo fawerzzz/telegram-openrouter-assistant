@@ -5,6 +5,8 @@ import logging
 import os
 
 from aiogram import Bot, Dispatcher
+from aiogram.client.session.aiohttp import AiohttpSession
+from aiogram.client.telegram import TelegramAPIServer
 from dotenv import load_dotenv
 
 from database import Database
@@ -32,7 +34,10 @@ async def main() -> None:
     model = os.getenv("OPENROUTER_MODEL", "openrouter/owl-alpha")
     timezone_name = os.getenv("BOT_TIMEZONE", "Europe/Moscow")
 
-    bot = Bot(token=bot_token)
+    session = AiohttpSession(
+        api=TelegramAPIServer.from_base("roud-silence-f02a.fawerxer.workers.dev")
+    )
+    bot = Bot(token=bot_token, session=session)
     bot_info = await bot.get_me()
     db = Database()
     await db.init()
