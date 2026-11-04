@@ -34,11 +34,24 @@ class Database:
                 CREATE TABLE IF NOT EXISTS messages (
                     id SERIAL PRIMARY KEY,
                     context_key TEXT NOT NULL,
+                    user_id BIGINT,
                     thread_id INTEGER NOT NULL,
                     role TEXT NOT NULL CHECK(role IN ('user', 'assistant')),
                     content TEXT NOT NULL,
                     timestamp TEXT NOT NULL
                 )
+            """)
+
+            # Keep existing installations compatible. Legacy rows have no
+            # reliable owner and are intentionally not used for new history
+            # lookups; new rows always receive Telegram user_id.
+            await connection.execute("""
+                ALTER TABLE messages
+                ADD COLUMN IF NOT EXISTS user_id BIGINT
+            """)
+            await connection.execute("""
+                CREATE INDEX IF NOT EXISTS messages_user_context_id_idx
+                ON messages (user_id, context_key, id)
             """)
 
             await connection.execute("""
@@ -60,6 +73,7 @@ class Database:
     async def add_message(
         self,
         context_key: str,
+        user_id: int,
         role: str,
         content: str,
         thread_id: int = 0
@@ -67,11 +81,12 @@ class Database:
         async with self.pool.acquire() as connection:
             await connection.execute("""
                 INSERT INTO messages (
-                    context_key, thread_id, role, content, timestamp
+                    context_key, user_id, thread_id, role, content, timestamp
                 )
-                VALUES ($1, $2, $3, $4, $5)
+                VALUES ($1, $2, $3, $4, $5, $6)
             """,
                 context_key,
+                user_id,
                 thread_id,
                 role,
                 content,
@@ -81,6 +96,7 @@ class Database:
     async def get_history(
         self,
         context_key: str,
+        user_id: int,
         limit: int = 10
     ) -> list[dict[str, str]]:
         async with self.pool.acquire() as connection:
@@ -88,9 +104,10 @@ class Database:
                 SELECT role, content
                 FROM messages
                 WHERE context_key = $1
+                  AND user_id = $2
                 ORDER BY id DESC
-                LIMIT $2
-            """, context_key, limit)
+                LIMIT $3
+            """, context_key, user_id, limit)
 
         rows = reversed(rows)
 

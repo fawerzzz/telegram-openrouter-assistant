@@ -56,11 +56,15 @@ async def process_assistant_request(
     else:
         await db.add_message(
             request.context_key,
+            request.user_id,
             "user",
             user_message,
             thread_id=request.thread_id
         )
-        history = await db.get_history(request.context_key)
+        history = await db.get_history(
+            request.context_key,
+            user_id=request.user_id,
+        )
     first_response = await openrouter.chat(history)
 
     if not first_response.tool_calls:
@@ -69,6 +73,7 @@ async def process_assistant_request(
         if not is_guest:
             await db.add_message(
                 request.context_key,
+                request.user_id,
                 "assistant",
                 answer,
                 thread_id=request.thread_id
@@ -135,6 +140,7 @@ async def process_assistant_request(
     if not is_guest:
         await db.add_message(
             request.context_key,
+            request.user_id,
             "assistant",
             answer,
             thread_id=request.thread_id
