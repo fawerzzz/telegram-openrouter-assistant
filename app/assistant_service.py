@@ -5,9 +5,9 @@ from dataclasses import dataclass, field
 from datetime import datetime
 from zoneinfo import ZoneInfo
 
-from database import Database, Reminder
-from openrouter_client import OpenRouterClient, parse_tool_arguments
-from scheduler import ReminderScheduler
+from .database import Database, Reminder
+from .openrouter_client import OpenRouterClient, parse_tool_arguments
+from .scheduler import ReminderScheduler
 
 
 @dataclass(slots=True)

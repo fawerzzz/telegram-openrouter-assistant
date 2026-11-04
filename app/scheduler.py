@@ -7,7 +7,7 @@ from zoneinfo import ZoneInfo
 from aiogram import Bot
 from apscheduler.schedulers.asyncio import AsyncIOScheduler
 
-from database import Database, Reminder
+from .database import Database, Reminder
 
 
 logger = logging.getLogger(__name__)
@@ -21,7 +21,6 @@ class ReminderScheduler:
         self.scheduler = AsyncIOScheduler(timezone=self.timezone)
 
     async def start(self) -> None:
-        # Интервальная проверка страхует от пропущенных date job после перезапуска.
         self.scheduler.add_job(
             self.send_due_reminders,
             "interval",

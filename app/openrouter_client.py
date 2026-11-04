@@ -104,7 +104,6 @@ class OpenRouterClient:
         payload: dict[str, Any] = {
             "model": self.model,
             "messages": messages,
-            # OpenRouter совместим с OpenAI Chat Completions tool calling.
             "tools": TOOLS,
             "tool_choice": "auto",
         }

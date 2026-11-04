@@ -7,10 +7,10 @@ import os
 from aiogram import Bot, Dispatcher
 from dotenv import load_dotenv
 
-from database import Database
-from handlers import router
-from openrouter_client import OpenRouterClient
-from scheduler import ReminderScheduler
+from .database import Database
+from .handlers import router
+from .openrouter_client import OpenRouterClient
+from .scheduler import ReminderScheduler
 
 
 def require_env(name: str) -> str:

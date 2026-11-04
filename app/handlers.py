@@ -8,11 +8,11 @@ from aiogram import F, Router
 from aiogram.filters import Command
 from aiogram.types import Message, Update
 
-from assistant_service import AssistantRequest, process_assistant_request
-from database import Database
-from openrouter_client import OpenRouterClient, OpenRouterError
-from response_renderer import answer_guest_response, render_response, send_response
-from scheduler import ReminderScheduler
+from .assistant_service import AssistantRequest, process_assistant_request
+from .database import Database
+from .openrouter_client import OpenRouterClient, OpenRouterError
+from .response_renderer import answer_guest_response, render_response, send_response
+from .scheduler import ReminderScheduler
 
 
 logger = logging.getLogger(__name__)
