@@ -28,7 +28,7 @@ pipeline {
                 withCredentials([file(credentialsId: 'env-file', variable: 'ENV_FILE')]) {
                     sh 'cp "$ENV_FILE" .env'
                     sh 'chmod 600 .env'
-                    sh 'docker compose -p my-pipeline up -d --no-build'
+                    sh 'docker compose up -d --no-build'
                 }
             }
         }
