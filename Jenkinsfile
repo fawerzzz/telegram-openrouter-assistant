@@ -19,7 +19,7 @@ pipeline {
 
         stage('Validate') {
             steps {
-                sh 'python3 -m compileall -q .'
+                sh 'docker run --rm -v "$PWD:/app" -w /app python:3.13 python -m compileall -q .'
                 sh 'docker compose config -q'
             }
         }
