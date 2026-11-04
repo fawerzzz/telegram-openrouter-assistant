@@ -7,13 +7,20 @@ pipeline {
     }
 
     triggers {
-        pollSCM('* * * * *')
+        pollSCM('H/5 * * * *')
     }
 
     stages {
         stage('Checkout') {
             steps {
                 checkout scm
+            }
+        }
+
+        stage('Validate') {
+            steps {
+                sh 'python3 -m compileall -q .'
+                sh 'docker compose config -q'
             }
         }
 
